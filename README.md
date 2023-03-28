@@ -76,11 +76,72 @@ Inserte a continuación una captura de pantalla que muestre el resultado de ejec
 fichero `algebra/vectores.py` con la opción *verbosa*, de manera que se muestre el
 resultado de la ejecución de los tests unitarios.
 
+<img src="test_3_1.png" width="480" align="center">
+<img src="test_3_2.png" width="480" align="center">
+
 #### Código desarrollado
 
 Inserte a continuación el código de los métodos desarrollados en esta tarea, usando los
 comandos necesarios para que se realice el realce sintáctico en Python del mismo (no
 vale insertar una imagen o una captura de pantalla, debe hacerse en formato *markdown*).
+
+```python
+def __mul__(self, other):
+        """
+        multiplicación
+        >>> v1 = Vector([1, 2, 3]) 
+        >>> v2 = Vector([4, 5, 6])
+        >>> v1 * v2 
+        Vector([4, 10, 18])
+        >>> v1 * 2
+        Vector([2, 4, 6])
+        """
+        if isinstance(other, (int, float, complex)):
+            return Vector(self[i] * other for i in range (0, len(self)))
+        else:
+            return Vector(self[i] * other[i] for i in range (0, len(self)))
+        
+    __rmul__ = __mul__
+
+    def __matmul__(self, other):
+        """
+        Multiplicación matricial
+        >>> v1 = Vector([1, 2, 3])
+        >>> v2 = Vector([4, 5, 6])
+        >>> v1 @ v2
+        32
+        """
+
+        return sum(self[i] * other[i] for i in range (0, len(self)))
+
+    def __floordiv__(self, other):
+        """
+        tangencial
+        >>> v1 = Vector([2, 1, 2])
+        >>> v2 = Vector([0.5, 1, 0.5])
+        >>> v1 // v2
+        Vector([1.0, 2.0, 1.0])
+        """
+
+        return Vector(other * ((self @ other) / (other @ other)))
+    
+    __rfloordiv__ = __floordiv__
+
+
+    def __mod__(self, other):
+        """
+        normal
+        >>> v1 = Vector([2, 1, 2])
+        >>> v2 = Vector([0.5, 1, 0.5])
+        >>> v1 % v2
+        Vector([1.0, -1.0, 1.0])
+        """
+        return Vector(self - self // other)
+    
+    __rmod__ = __mod__
+
+doctest.testmod()
+```
 
 #### Subida del resultado al repositorio GitHub y *pull-request*
 
