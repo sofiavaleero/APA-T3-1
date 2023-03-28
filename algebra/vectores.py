@@ -1,9 +1,11 @@
+
 """
     Tercera tarea de APA - manejo de vectores
 
-    Nombre y apellidos:
+    Nombre y apellidos: Sofia Valero Martinez
 """
 
+import doctest
 class Vector:
     """
     Clase usada para trabajar con vectores sencillos
@@ -52,9 +54,11 @@ class Vector:
 
         return len(self.vector)
 
+
+
     def __add__(self, other):
         """
-        Suma al vector otro vector o una constante.
+        Multiplicacion al vector otro vector o una constante.
         """
 
         if isinstance(other, (int, float, complex)):
@@ -84,4 +88,65 @@ class Vector:
         """
 
         return -self + other
+    
+    
+    def __mul__(self, other):
+        """
+        multiplicacion
+        >>> v1 = Vector([1, 2, 3]) 
+        >>> v2 = Vector([4, 5, 6])
+        >>> v1 * v2 
+        Vector([4, 10, 18])
+        >>> v1 * 2
+        Vector([2, 4, 6])
+        """
+        if isinstance(other, (int, float, complex)):
+            return Vector(self[i] * other for i in range (0, len(self)))
+        else:
+            return Vector(self[i] * other[i] for i in range (0, len(self)))
+        
+    __rmul__ = __mul__
 
+    def __matmul__(self, other):
+        """
+        Multiplicación matricial
+        >>> v1 = Vector([1, 2, 3])
+        >>> v2 = Vector([4, 5, 6])
+        >>> v1 @ v2
+        32
+        """
+
+        return sum(self[i] * other[i] for i in range (0, len(self)))
+
+    def __floordiv__(self, other):
+        """
+        tangencial
+        >>> v1 = Vector([2, 1, 2])
+        >>> v2 = Vector([0.5, 1, 0.5])
+        >>> v1 // v2
+        Vector([1.0, 2.0, 1.0])
+        """
+
+        return Vector(other * ((self @ other) / (other @ other)))
+    
+    __rfloordiv__ = __floordiv__
+
+
+    def __mod__(self, other):
+        """
+        normal
+        >>> v1 = Vector([2, 1, 2])
+        >>> v2 = Vector([0.5, 1, 0.5])
+        >>> v1 % v2
+        Vector([1.0, -1.0, 1.0])
+        """
+        return Vector(self - self // other)
+    
+    __rmod__ = __mod__
+
+
+
+
+
+
+doctest.testmod()
